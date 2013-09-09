@@ -24,10 +24,12 @@ public final class TimeSeriesPair implements ITimeSeriesPair {
 		this.value = value;
 	}
 	
+	@Override
 	public long time() {
 		return this.time;
 	}
 	
+	@Override
 	public float value() {
 		return this.value;
 	}
