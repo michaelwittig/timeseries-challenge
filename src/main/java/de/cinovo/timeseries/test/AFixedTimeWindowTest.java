@@ -13,7 +13,7 @@ import de.cinovo.timeseries.IFixedTimeWindow;
 @SuppressWarnings("javadoc")
 public abstract class AFixedTimeWindowTest {
 	
-	public static final float DELTA = 0.0001f;
+	public static final float PRECISION = 0.001f;
 	
 	
 	protected abstract IFixedTimeWindow create();
@@ -94,8 +94,8 @@ public abstract class AFixedTimeWindowTest {
 	public void testFirstAfterAdd1InWindow() {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(1l, ts.get(1l).first().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(1.0f, ts.get(1l).first().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1l, ts.get(1l).first().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(1.0f, ts.get(1l).first().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -103,8 +103,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1l, 2.0f);
-		Assert.assertEquals(1l, ts.get(1l).first().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(1.0f, ts.get(1l).first().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1l, ts.get(1l).first().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(1.0f, ts.get(1l).first().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -112,8 +112,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1001l, 2.0f);
-		Assert.assertEquals(1l, ts.get(1001l).first().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(1.0f, ts.get(1001l).first().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1l, ts.get(1001l).first().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(1.0f, ts.get(1001l).first().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -121,8 +121,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1002l, 2.0f);
-		Assert.assertEquals(1002l, ts.get(1002l).first().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(2.0f, ts.get(1002l).first().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1002l, ts.get(1002l).first().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(2.0f, ts.get(1002l).first().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -146,8 +146,8 @@ public abstract class AFixedTimeWindowTest {
 	public void testLastAfterAdd1InWindow() {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(1l, ts.get(1l).last().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(1.0f, ts.get(1l).last().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1l, ts.get(1l).last().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(1.0f, ts.get(1l).last().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -155,8 +155,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1l, 2.0f);
-		Assert.assertEquals(1l, ts.get(1l).last().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(2.0f, ts.get(1l).last().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1l, ts.get(1l).last().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(2.0f, ts.get(1l).last().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -164,8 +164,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1001l, 2.0f);
-		Assert.assertEquals(1001l, ts.get(1001l).last().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(2.0f, ts.get(1001l).last().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1001l, ts.get(1001l).last().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(2.0f, ts.get(1001l).last().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -173,8 +173,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1002l, 2.0f);
-		Assert.assertEquals(1002l, ts.get(1002l).last().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(2.0f, ts.get(1002l).last().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1002l, ts.get(1002l).last().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(2.0f, ts.get(1002l).last().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -198,8 +198,8 @@ public abstract class AFixedTimeWindowTest {
 	public void testMaximumAfterAdd1InWindow() {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(1l, ts.get(1l).maximum().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(1.0f, ts.get(1l).maximum().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1l, ts.get(1l).maximum().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(1.0f, ts.get(1l).maximum().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -207,8 +207,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1l, 2.0f);
-		Assert.assertEquals(1l, ts.get(1l).maximum().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(2.0f, ts.get(1l).maximum().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1l, ts.get(1l).maximum().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(2.0f, ts.get(1l).maximum().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -216,8 +216,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(1l, ts.get(1l).maximum().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(2.0f, ts.get(1l).maximum().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1l, ts.get(1l).maximum().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(2.0f, ts.get(1l).maximum().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -225,8 +225,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1001l, 2.0f);
-		Assert.assertEquals(1001l, ts.get(1001l).maximum().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(2.0f, ts.get(1001l).maximum().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1001l, ts.get(1001l).maximum().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(2.0f, ts.get(1001l).maximum().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -234,8 +234,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1001l, 1.0f);
-		Assert.assertEquals(1l, ts.get(1001l).maximum().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(2.0f, ts.get(1001l).maximum().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1l, ts.get(1001l).maximum().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(2.0f, ts.get(1001l).maximum().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -243,8 +243,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1002l, 2.0f);
-		Assert.assertEquals(1002l, ts.get(1002l).maximum().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(2.0f, ts.get(1002l).maximum().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1002l, ts.get(1002l).maximum().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(2.0f, ts.get(1002l).maximum().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -252,8 +252,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1002l, 1.0f);
-		Assert.assertEquals(1002l, ts.get(1002l).maximum().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(1.0f, ts.get(1002l).maximum().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1002l, ts.get(1002l).maximum().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(1.0f, ts.get(1002l).maximum().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -277,8 +277,8 @@ public abstract class AFixedTimeWindowTest {
 	public void testMinimumAfterAdd1InWindow() {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(1l, ts.get(1l).minimum().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(1.0f, ts.get(1l).minimum().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1l, ts.get(1l).minimum().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(1.0f, ts.get(1l).minimum().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -286,8 +286,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1l, 2.0f);
-		Assert.assertEquals(1l, ts.get(1l).minimum().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(1.0f, ts.get(1l).minimum().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1l, ts.get(1l).minimum().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(1.0f, ts.get(1l).minimum().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -295,8 +295,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(1l, ts.get(1l).minimum().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(1.0f, ts.get(1l).minimum().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1l, ts.get(1l).minimum().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(1.0f, ts.get(1l).minimum().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -304,8 +304,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1001l, 2.0f);
-		Assert.assertEquals(1l, ts.get(1001l).minimum().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(1.0f, ts.get(1001l).minimum().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1l, ts.get(1001l).minimum().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(1.0f, ts.get(1001l).minimum().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -313,8 +313,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1001l, 1.0f);
-		Assert.assertEquals(1001l, ts.get(1001l).minimum().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(1.0f, ts.get(1001l).minimum().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1001l, ts.get(1001l).minimum().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(1.0f, ts.get(1001l).minimum().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -322,8 +322,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1002l, 2.0f);
-		Assert.assertEquals(1002l, ts.get(1002l).minimum().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(2.0f, ts.get(1002l).minimum().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1002l, ts.get(1002l).minimum().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(2.0f, ts.get(1002l).minimum().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -331,8 +331,8 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1002l, 1.0f);
-		Assert.assertEquals(1002l, ts.get(1002l).minimum().time(), AFixedTimeWindowTest.DELTA);
-		Assert.assertEquals(1.0f, ts.get(1002l).minimum().value(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1002l, ts.get(1002l).minimum().time(), AFixedTimeWindowTest.PRECISION);
+		Assert.assertEquals(1.0f, ts.get(1002l).minimum().value(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -356,7 +356,7 @@ public abstract class AFixedTimeWindowTest {
 	public void testAverageAfterAdd1InWindow() {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(1.0f, ts.get(1l).avergage(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1.0f, ts.get(1l).avergage(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -364,7 +364,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1l, 2.0f);
-		Assert.assertEquals(1.5f, ts.get(1l).avergage(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1.5f, ts.get(1l).avergage(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -372,7 +372,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(1.5f, ts.get(1l).avergage(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1.5f, ts.get(1l).avergage(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -380,7 +380,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1001l, 2.0f);
-		Assert.assertEquals(1.5f, ts.get(1001l).avergage(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1.5f, ts.get(1001l).avergage(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -388,7 +388,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1001l, 1.0f);
-		Assert.assertEquals(1.5f, ts.get(1001l).avergage(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1.5f, ts.get(1001l).avergage(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -396,7 +396,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1002l, 2.0f);
-		Assert.assertEquals(2.0f, ts.get(1002l).avergage(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(2.0f, ts.get(1002l).avergage(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -404,7 +404,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1002l, 1.0f);
-		Assert.assertEquals(1.0f, ts.get(1002l).avergage(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1.0f, ts.get(1002l).avergage(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -428,7 +428,7 @@ public abstract class AFixedTimeWindowTest {
 	public void testVarianceAfterAdd1InWindow() {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(0.0f, ts.get(1l).variance(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(0.0f, ts.get(1l).variance(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -436,7 +436,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1l, 2.0f);
-		Assert.assertEquals(0.25f, ts.get(1l).variance(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(0.25f, ts.get(1l).variance(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -444,7 +444,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(0.25f, ts.get(1l).variance(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(0.25f, ts.get(1l).variance(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -452,7 +452,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1001l, 2.0f);
-		Assert.assertEquals(0.25f, ts.get(1001l).variance(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(0.25f, ts.get(1001l).variance(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -460,7 +460,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1001l, 1.0f);
-		Assert.assertEquals(0.25f, ts.get(1001l).variance(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(0.25f, ts.get(1001l).variance(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -468,7 +468,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1002l, 2.0f);
-		Assert.assertEquals(0.0f, ts.get(1002l).variance(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(0.0f, ts.get(1002l).variance(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -476,7 +476,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1002l, 1.0f);
-		Assert.assertEquals(0.0f, ts.get(1002l).variance(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(0.0f, ts.get(1002l).variance(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -500,7 +500,7 @@ public abstract class AFixedTimeWindowTest {
 	public void testDeviationAfterAdd1InWindow() {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(0.0f, ts.get(1l).deviation(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(0.0f, ts.get(1l).deviation(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -508,7 +508,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1l, 2.0f);
-		Assert.assertEquals(0.5f, ts.get(1l).deviation(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(0.5f, ts.get(1l).deviation(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -516,7 +516,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(0.5f, ts.get(1l).deviation(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(0.5f, ts.get(1l).deviation(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -524,7 +524,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1001l, 2.0f);
-		Assert.assertEquals(0.5f, ts.get(1001l).deviation(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(0.5f, ts.get(1001l).deviation(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -532,7 +532,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1001l, 1.0f);
-		Assert.assertEquals(0.5f, ts.get(1001l).deviation(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(0.5f, ts.get(1001l).deviation(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -540,7 +540,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1002l, 2.0f);
-		Assert.assertEquals(0.0f, ts.get(1002l).deviation(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(0.0f, ts.get(1002l).deviation(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -548,7 +548,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1002l, 1.0f);
-		Assert.assertEquals(0.0f, ts.get(1002l).deviation(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(0.0f, ts.get(1002l).deviation(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -572,7 +572,7 @@ public abstract class AFixedTimeWindowTest {
 	public void testMedianAfterAdd1InWindow() {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(1.0f, ts.get(1l).median(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1.0f, ts.get(1l).median(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -580,7 +580,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1l, 2.0f);
-		Assert.assertEquals(1.5f, ts.get(1l).median(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1.5f, ts.get(1l).median(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -588,7 +588,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(1.5f, ts.get(1l).median(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1.5f, ts.get(1l).median(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -596,7 +596,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1001l, 2.0f);
-		Assert.assertEquals(1.5f, ts.get(1001l).median(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1.5f, ts.get(1001l).median(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -604,7 +604,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1001l, 1.0f);
-		Assert.assertEquals(1.5f, ts.get(1001l).median(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1.5f, ts.get(1001l).median(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -612,7 +612,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1002l, 2.0f);
-		Assert.assertEquals(2.0f, ts.get(1002l).median(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(2.0f, ts.get(1002l).median(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -620,7 +620,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 2.0f);
 		ts.add(1002l, 1.0f);
-		Assert.assertEquals(1.0f, ts.get(1002l).median(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1.0f, ts.get(1002l).median(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -634,7 +634,7 @@ public abstract class AFixedTimeWindowTest {
 	public void testMedianCalculationWith1Value() {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
-		Assert.assertEquals(1.0f, ts.get(1l).median(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1.0f, ts.get(1l).median(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -642,7 +642,7 @@ public abstract class AFixedTimeWindowTest {
 		final IFixedTimeWindow ts = this.create();
 		ts.add(1l, 1.0f);
 		ts.add(1l, 2.0f);
-		Assert.assertEquals(1.5f, ts.get(1l).median(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(1.5f, ts.get(1l).median(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -651,7 +651,7 @@ public abstract class AFixedTimeWindowTest {
 		ts.add(1l, 3.0f);
 		ts.add(1l, 1.0f);
 		ts.add(1l, 2.0f);
-		Assert.assertEquals(2.0f, ts.get(1l).median(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(2.0f, ts.get(1l).median(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -661,7 +661,7 @@ public abstract class AFixedTimeWindowTest {
 		ts.add(1l, 2.0f);
 		ts.add(1l, 4.0f);
 		ts.add(1l, 3.0f);
-		Assert.assertEquals(2.5f, ts.get(1l).median(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(2.5f, ts.get(1l).median(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 	@Test
@@ -672,7 +672,7 @@ public abstract class AFixedTimeWindowTest {
 		ts.add(1l, 4.0f);
 		ts.add(1l, 2.0f);
 		ts.add(1l, 3.0f);
-		Assert.assertEquals(3.0f, ts.get(1l).median(), AFixedTimeWindowTest.DELTA);
+		Assert.assertEquals(3.0f, ts.get(1l).median(), AFixedTimeWindowTest.PRECISION);
 	}
 	
 }

@@ -1,5 +1,7 @@
 package de.cinovo.timeseries.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 
@@ -135,7 +137,7 @@ public final class SimpleFixedTimeWindow implements IFixedTimeWindow {
 				float min = first.value();
 				long maxTime = first.time();
 				float max = first.value();
-				double sum = 0.0d;
+				BigDecimal sum = BigDecimal.ZERO;
 				for (final TimeSeriesPair pair : this.values) {
 					if (pair.value() < min) {
 						minTime = pair.time();
@@ -145,11 +147,11 @@ public final class SimpleFixedTimeWindow implements IFixedTimeWindow {
 						maxTime = pair.time();
 						max = pair.value();
 					}
-					sum += pair.value();
+					sum = sum.add(new BigDecimal(pair.value()));
 				}
 				this.cachedMinimum = new TimeSeriesPair(minTime, min);
 				this.cachedMaximum = new TimeSeriesPair(maxTime, max);
-				this.cachedAvergage = (float) (sum / this.values.size());
+				this.cachedAvergage = sum.divide(new BigDecimal(this.values.size()), 4, RoundingMode.HALF_UP).floatValue();
 			} else {
 				this.cachedMinimum = null;
 				this.cachedMaximum = null;
