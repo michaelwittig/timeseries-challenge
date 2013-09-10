@@ -55,20 +55,20 @@ public abstract class AFixedWindowBenchmark {
 	 * @throws Exception If something went wrong...
 	 */
 	protected AFixedWindowBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize, final String aComment) throws Exception {
-		final BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("de/cinovo/timeseries/benchmark/benchmark.data")));
-		String line = null;
-		final ArrayList<ITimeSeriesPair> aPairs = new ArrayList<ITimeSeriesPair>();
-		while ((line = br.readLine()) != null) {
-			final String[] s = line.split(",");
-			final long time = Long.parseLong(s[0]);
-			final float value = Float.parseFloat(s[1]);
-			aPairs.add(new TimeSeriesPair(time, value));
+		try (final BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("de/cinovo/timeseries/benchmark/benchmark.data")))) {
+			String line = null;
+			final ArrayList<ITimeSeriesPair> aPairs = new ArrayList<ITimeSeriesPair>();
+			while ((line = br.readLine()) != null) {
+				final String[] s = line.split(",");
+				final long time = Long.parseLong(s[0]);
+				final float value = Float.parseFloat(s[1]);
+				aPairs.add(new TimeSeriesPair(time, value));
+			}
+			this.pairs = aPairs;
+			this.comment = aComment;
+			this.benchmarkSuite = aBenchmarkSuite;
+			this.windowSize = aWindowSize;
 		}
-		br.close();
-		this.pairs = aPairs;
-		this.comment = aComment;
-		this.benchmarkSuite = aBenchmarkSuite;
-		this.windowSize = aWindowSize;
 	}
 	
 	/**
