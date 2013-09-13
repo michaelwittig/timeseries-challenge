@@ -12,9 +12,8 @@ public final class DeltaFixedTimeWindowBenchmarkSuite extends ABenchmarkSuite {
 	
 	/**
 	 * @param args Arguments
-	 * @throws Exception If something went wrong...
 	 */
-	public static void main(final String[] args) throws Exception {
+	public static void main(final String[] args) {
 		new DeltaFixedTimeWindowBenchmarkSuite().run();
 	}
 	
@@ -22,4 +21,5 @@ public final class DeltaFixedTimeWindowBenchmarkSuite extends ABenchmarkSuite {
 	protected IFixedTimeWindow create(final long windowSize) {
 		return new DeltaFixedTimeWindow(windowSize);
 	}
+	
 }

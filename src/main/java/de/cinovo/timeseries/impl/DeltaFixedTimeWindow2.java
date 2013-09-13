@@ -1,7 +1,6 @@
 package de.cinovo.timeseries.impl;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 
 import com.google.common.base.Preconditions;
 
@@ -11,15 +10,16 @@ import de.cinovo.timeseries.ITimeSeriesPair;
 
 /**
  * 
- * Implementation of a fixed window time series.<br>
- * The implementation tries to calculate only the changes made by the arriving and leaving values when possible.
+ * Optimization: Using a fixed primitive array for delting elements.
  * 
  * @author mwittig
  * 
  */
-public final class DeltaFixedTimeWindow implements IFixedTimeWindow {
+public final class DeltaFixedTimeWindow2 implements IFixedTimeWindow {
 	
 	private final long window;
+	
+	private final int expectedMaxSize;
 	
 	private long lastTime = Long.MIN_VALUE;
 	
@@ -32,28 +32,27 @@ public final class DeltaFixedTimeWindow implements IFixedTimeWindow {
 	 * @param window Window size (e. g. if you use milliseconds as time than window size is in milliseconds)
 	 * @param expectedMaxSize Expected maximum number of values
 	 */
-	public DeltaFixedTimeWindow(final long window, final int expectedMaxSize) {
+	public DeltaFixedTimeWindow2(final long window, final int expectedMaxSize) {
 		Preconditions.checkArgument(window > 0, "window must be > 0");
 		Preconditions.checkArgument(expectedMaxSize > 0, "expectedMaxSize must be > 0");
 		this.window = window;
+		this.expectedMaxSize = expectedMaxSize;
 		this.values = new ArrayDeque<TimeSeriesPair>(expectedMaxSize);
-		this.wrapper = new Wrapper(this.values);
+		this.wrapper = new Wrapper(this.values, this.deletes);
 	}
 	
 	/**
 	 * @param window Window size (e. g. if you use milliseconds as time than window size is in milliseconds)
 	 */
-	public DeltaFixedTimeWindow(final long window) {
-		this(window, 10000);
+	public DeltaFixedTimeWindow2(final long window) {
+		this(window, 1000);
 	}
 	
 	@Override
 	public ITimeSeries get(final long now) {
 		this.checkTime(now);
-		final ArrayList<TimeSeriesPair> deletes = this.cleanUp(now);
-		if (deletes.size() > 0) {
-			this.wrapper.delete(deletes);
-		}
+		this.cleanUp(now);
+		this.wrapper.delete();
 		return this.wrapper;
 	}
 	
@@ -77,30 +76,38 @@ public final class DeltaFixedTimeWindow implements IFixedTimeWindow {
 		this.lastTime = now;
 	}
 	
+	
+	private final float[] deletes = new float[this.expectedMaxSize];
+	private static final float STOP_ELEMENT = Float.MIN_VALUE;
+	
+	
 	/**
 	 * @param now Time
-	 * @return Deleted pairs
 	 */
-	private ArrayList<TimeSeriesPair> cleanUp(final long now) {
-		final ArrayList<TimeSeriesPair> deletes = new ArrayList<TimeSeriesPair>(Math.max(10, this.values.size() / 10));
-		while (true) {
+	private void cleanUp(final long now) {
+		int i = 0;
+		while (i < this.deletes.length) {
 			final TimeSeriesPair pair = this.values.pollFirst();
 			if (pair == null) {
+				this.deletes[i] = DeltaFixedTimeWindow2.STOP_ELEMENT;
 				break;
 			}
 			if (pair.time() >= (now - this.window)) { // check if the value is not too old
 				this.values.addFirst(pair); // reinsert the value at the beginning
+				this.deletes[i] = DeltaFixedTimeWindow2.STOP_ELEMENT;
 				break;
 			}
-			deletes.add(pair);
+			this.deletes[i] = pair.value();
+			i += 1;
 		}
-		return deletes;
 	}
 	
 	
 	private static final class Wrapper implements ITimeSeries {
 		
 		private final ArrayDeque<TimeSeriesPair> values;
+		
+		private final float[] deletes;
 		
 		private static final TimeSeriesPair CLEARED = new TimeSeriesPair(Long.MIN_VALUE, Float.NaN);
 		
@@ -119,9 +126,10 @@ public final class DeltaFixedTimeWindow implements IFixedTimeWindow {
 		private double sum = 0.0d;
 		
 		
-		public Wrapper(final ArrayDeque<TimeSeriesPair> values) {
+		public Wrapper(final ArrayDeque<TimeSeriesPair> values, final float[] deletes) {
 			super();
 			this.values = values;
+			this.deletes = deletes;
 		}
 		
 		public void add(final TimeSeriesPair pair) {
@@ -138,9 +146,12 @@ public final class DeltaFixedTimeWindow implements IFixedTimeWindow {
 			}
 		}
 		
-		public void delete(final ArrayList<TimeSeriesPair> pairs) {
-			for (final TimeSeriesPair pair : pairs) {
-				final float value = pair.value();
+		public void delete() {
+			for (int i = 0; i < this.deletes.length; i++) {
+				final float value = this.deletes[i];
+				if (value == DeltaFixedTimeWindow2.STOP_ELEMENT) {
+					break;
+				}
 				this.sum -= value;
 				if ((this.cachedMaximum != null) && (this.cachedMaximum != Wrapper.CLEARED) && FloatHelper.equals(value, this.cachedMaximum.value())) {
 					this.cachedMaximum = Wrapper.CLEARED; // we lost the maximum. we have to check all values to find the new minimum.
@@ -150,7 +161,6 @@ public final class DeltaFixedTimeWindow implements IFixedTimeWindow {
 				}
 			}
 			this.cachedAvergage = Float.POSITIVE_INFINITY;
-			
 		}
 		
 		private void refreshCacheAvg() {
