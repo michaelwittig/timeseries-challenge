@@ -12,9 +12,8 @@ public final class DeviationBenchmark extends AFixedWindowBenchmark {
 	/**
 	 * @param aBenchmarkSuite Benchmark suite
 	 * @param aWindowSize Window size
-	 * @throws Exception If something went wrong...
 	 */
-	public DeviationBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize) throws Exception {
+	public DeviationBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize) {
 		super(aBenchmarkSuite, aWindowSize);
 	}
 	

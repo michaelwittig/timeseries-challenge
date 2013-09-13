@@ -12,9 +12,8 @@ public final class MedianBenchmark extends AFixedWindowBenchmark {
 	/**
 	 * @param aBenchmarkSuite Benchmark suite
 	 * @param aWindowSize Window size
-	 * @throws Exception If something went wrong...
 	 */
-	public MedianBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize) throws Exception {
+	public MedianBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize) {
 		super(aBenchmarkSuite, aWindowSize);
 	}
 	

@@ -12,9 +12,8 @@ public final class SimpleFixedTimeWindowBenchmarkSuite extends ABenchmarkSuite {
 	
 	/**
 	 * @param args Arguments
-	 * @throws Exception If something went wrong...
 	 */
-	public static void main(final String[] args) throws Exception {
+	public static void main(final String[] args) {
 		new SimpleFixedTimeWindowBenchmarkSuite().run();
 	}
 	
