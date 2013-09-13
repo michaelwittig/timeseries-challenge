@@ -12,9 +12,8 @@ public final class VarianceBenchmark extends AFixedWindowBenchmark {
 	/**
 	 * @param aBenchmarkSuite Benchmark suite
 	 * @param aWindowSize Window size
-	 * @throws Exception If something went wrong...
 	 */
-	public VarianceBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize) throws Exception {
+	public VarianceBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize) {
 		super(aBenchmarkSuite, aWindowSize);
 	}
 	

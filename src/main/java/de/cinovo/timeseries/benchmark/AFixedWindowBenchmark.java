@@ -17,17 +17,33 @@ import de.cinovo.timeseries.impl.TimeSeriesPair;
  */
 public abstract class AFixedWindowBenchmark {
 	
-	private static final int WARM_UP_CYCLES = 100;
+	private static final int WARM_UP_CYCLES = 100000;
 	
-	private static final int MEASURE_CYCLES = 1000;
+	private static final int MEASURE_CYCLES = 10000;
 	
-	private final List<ITimeSeriesPair> pairs;
+	private static final List<ITimeSeriesPair> pairs;
 	
 	private final String comment;
 	
 	private final ABenchmarkSuite benchmarkSuite;
 	
 	private final long windowSize;
+	
+	static {
+		try (final BufferedReader br = new BufferedReader(new InputStreamReader(AFixedWindowBenchmark.class.getClassLoader().getResourceAsStream("de/cinovo/timeseries/benchmark/benchmark.data")))) {
+			String line;
+			final ArrayList<ITimeSeriesPair> aPairs = new ArrayList<ITimeSeriesPair>();
+			while ((line = br.readLine()) != null) {
+				final String[] s = line.split(",");
+				final long time = Long.parseLong(s[0]);
+				final float value = Float.parseFloat(s[1]);
+				aPairs.add(new TimeSeriesPair(time, value));
+			}
+			pairs = aPairs;
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 	
 	
 	/**
@@ -54,21 +70,10 @@ public abstract class AFixedWindowBenchmark {
 	 * @param aComment Comment
 	 * @throws Exception If something went wrong...
 	 */
-	protected AFixedWindowBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize, final String aComment) throws Exception {
-		try (final BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("de/cinovo/timeseries/benchmark/benchmark.data")))) {
-			String line = null;
-			final ArrayList<ITimeSeriesPair> aPairs = new ArrayList<ITimeSeriesPair>();
-			while ((line = br.readLine()) != null) {
-				final String[] s = line.split(",");
-				final long time = Long.parseLong(s[0]);
-				final float value = Float.parseFloat(s[1]);
-				aPairs.add(new TimeSeriesPair(time, value));
-			}
-			this.pairs = aPairs;
-			this.comment = aComment;
-			this.benchmarkSuite = aBenchmarkSuite;
-			this.windowSize = aWindowSize;
-		}
+	protected AFixedWindowBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize, final String aComment) {
+		this.comment = aComment;
+		this.benchmarkSuite = aBenchmarkSuite;
+		this.windowSize = aWindowSize;
 	}
 	
 	/**
@@ -76,16 +81,15 @@ public abstract class AFixedWindowBenchmark {
 	 * @param aWindowSize Window size
 	 * @throws Exception If something went wrong...
 	 */
-	protected AFixedWindowBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize) throws Exception {
+	protected AFixedWindowBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize) {
 		this(aBenchmarkSuite, aWindowSize, "window: " + aWindowSize);
-		
 	}
 	
 	private void warmUp() {
 		System.gc();
 		for (int i = 0; i < AFixedWindowBenchmark.WARM_UP_CYCLES; i++) {
 			final IFixedTimeWindow impl = this.create();
-			for (final ITimeSeriesPair pair : this.pairs) {
+			for (final ITimeSeriesPair pair : AFixedWindowBenchmark.pairs) {
 				this.call(impl, pair);
 			}
 		}
@@ -106,7 +110,7 @@ public abstract class AFixedWindowBenchmark {
 		for (int i = 0; i < AFixedWindowBenchmark.MEASURE_CYCLES; i++) {
 			final IFixedTimeWindow impl = this.create();
 			final long begin = System.nanoTime();
-			for (final ITimeSeriesPair pair : this.pairs) {
+			for (final ITimeSeriesPair pair : AFixedWindowBenchmark.pairs) {
 				this.call(impl, pair);
 			}
 			final long end = System.nanoTime();
@@ -123,7 +127,7 @@ public abstract class AFixedWindowBenchmark {
 	}
 	
 	private void report(final long[] runtimes) {
-		System.out.println(this.getClass().getSimpleName() + " (" + this.comment + ", runs: " + runtimes.length + "; calls per run: " + this.pairs.size() + ")");
+		System.out.println(this.getClass().getSimpleName() + " (" + this.comment + ", runs: " + runtimes.length + "; calls per run: " + AFixedWindowBenchmark.pairs.size() + ")");
 		System.out.println("                     nanos               micros               millis");
 		long runtimeSum = 0l;
 		long runtimeMax = Long.MIN_VALUE;

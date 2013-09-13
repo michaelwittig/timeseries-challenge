@@ -11,10 +11,8 @@ public abstract class ABenchmarkSuite {
 	
 	protected abstract IFixedTimeWindow create(final long windowSize);
 	
-	/**
-	 * @throws Exception If something went wrong...
-	 */
-	public void run() throws Exception {
+	/** */
+	public void run() {
 		this.run(1000l); // 1 sec
 		this.run(10000l); // 10 sec
 		this.run(30000l); // 30 sec
@@ -22,7 +20,7 @@ public abstract class ABenchmarkSuite {
 		this.run(600000l); // 10 min
 	}
 	
-	private void run(final long windowSize) throws Exception {
+	private void run(final long windowSize) {
 		new FirstBenchmark(this, windowSize).run();
 		System.out.println("");
 		new LastBenchmark(this, windowSize).run();

@@ -12,9 +12,8 @@ public final class MinimumBenchmark extends AFixedWindowBenchmark {
 	/**
 	 * @param aBenchmarkSuite Benchmark suite
 	 * @param aWindowSize Window size
-	 * @throws Exception If something went wrong...
 	 */
-	public MinimumBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize) throws Exception {
+	public MinimumBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize) {
 		super(aBenchmarkSuite, aWindowSize);
 	}
 	
