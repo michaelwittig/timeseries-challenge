@@ -11,10 +11,10 @@ import java.util.ArrayList;
 @SuppressWarnings("javadoc")
 public final class Learned1_ArrayListGet {
 	
-	private static final Integer run(final ArrayList<Integer> list) {
-		Integer v = null;
+	private static final Integer run(final int delta, final ArrayList<Integer> list) {
+		Integer v = delta;
 		for (int i = 0; i < list.size(); i++) {
-			v = list.get(i);
+			v += list.get(i);
 		}
 		return v;
 	}
@@ -27,17 +27,17 @@ public final class Learned1_ArrayListGet {
 		for (int i = 0; i < Learned1.ELEMENTS; i++) {
 			list.add(i);
 		}
-		System.out.println("test " + (Learned1_ArrayListGet.run(list) == (Learned1.ELEMENTS - 1)));
+		System.out.println("test " + (Learned1_ArrayListGet.run(0, list) == Learned1.SUM_ELEMENTS));
 		System.out.println("warmup...");
 		for (int i = 0; i < Learned1.WARMUP_RUNS; i++) {
-			Learned1_ArrayListGet.run(list);
+			Learned1_ArrayListGet.run(i, list);
 		}
 		System.out.println("warmup done");
 		System.gc();
 		System.out.println("measure...");
 		final long begin = System.nanoTime();
 		for (int i = 0; i < Learned1.MEASURE_RUNS; i++) {
-			Learned1_ArrayListGet.run(list);
+			Learned1_ArrayListGet.run(i, list);
 		}
 		final long runtime = System.nanoTime() - begin;
 		System.out.println("run (ns): " + runtime);

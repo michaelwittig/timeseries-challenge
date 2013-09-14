@@ -9,10 +9,10 @@ package de.cinovo.timeseries.learned;
 @SuppressWarnings("javadoc")
 public final class Learned1_intArray {
 	
-	private static final int run(final int[] list) {
-		int v = -1;
+	private static final int run(final int delta, final int[] list) {
+		int v = delta;
 		for (int i = 0; i < list.length; i++) {
-			v = list[i];
+			v += list[i];
 		}
 		return v;
 	}
@@ -25,17 +25,17 @@ public final class Learned1_intArray {
 		for (int i = 0; i < Learned1.ELEMENTS; i++) {
 			list[i] = i;
 		}
-		System.out.println("test " + (Learned1_intArray.run(list) == (Learned1.ELEMENTS - 1)));
+		System.out.println("test " + (Learned1_intArray.run(0, list) == Learned1.SUM_ELEMENTS));
 		System.out.println("warmup...");
 		for (int i = 0; i < Learned1.WARMUP_RUNS; i++) {
-			Learned1_intArray.run(list);
+			Learned1_intArray.run(i, list);
 		}
 		System.out.println("warmup done");
 		System.gc();
 		System.out.println("measure...");
 		final long begin = System.nanoTime();
 		for (int i = 0; i < Learned1.MEASURE_RUNS; i++) {
-			Learned1_intArray.run(list);
+			Learned1_intArray.run(i, list);
 		}
 		final long runtime = System.nanoTime() - begin;
 		System.out.println("run (ns): " + runtime);
