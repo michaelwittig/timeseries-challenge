@@ -8,10 +8,16 @@ Iterating over an Array using
 `````
 for (int i = 0; i < array.length; i++) {} 
 `````
-is significantally faster than iterating over an ArrayList using
+is much faster than iterating over an ArrayList using
 `````
 for (Object o : arraylist) {}
 `````
+But actually I am very confused by this result.
+
+## Expectation
+* I expected that iterating over an ArrayList, ArrayDeque or Array depends on the number of elements in the data strucutre
+* I expected that iterating over an ArrayList and ArrayDeque is similar
+* I expected that iterating over a primitive Array int[] is faster than Integer[]
 
 ## Benchmark
 
@@ -98,6 +104,18 @@ Java HotSpot(TM) 64-Bit Server VM (build 23.3-b01, mixed mode)
 		</tr>
 	</tbody>
 </table>
+
+## Conclusions
+
+* I expected that iterating over an ArrayList, ArrayDeque or Array depends on the number of elements in the data strucutre
+	* yes: Iterating over an ArrayList and ArrayDeque grows linear to the number of elements
+	* no: Iterating over an Array is a constant time operation
+* I expected that iterating over an ArrayList and ArrayDeque is similar
+	* no: Iterating over an ArrayList is twice as fast as iterating over an ArrayDeque
+* I expected that iterating over a primitive Array int[] is faster than Integer[]
+	* no: primitive Arrays are not faster than object arrays.
+
+## Log
 
 ### Output: 1 Elements
 `````
