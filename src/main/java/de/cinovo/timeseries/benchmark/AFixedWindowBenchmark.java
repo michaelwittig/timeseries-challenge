@@ -127,7 +127,8 @@ public abstract class AFixedWindowBenchmark {
 	}
 	
 	private void report(final long[] runtimes) {
-		System.out.println(this.getClass().getSimpleName() + " (" + this.comment + ", runs: " + runtimes.length + "; calls per run: " + AFixedWindowBenchmark.pairs.size() + ")");
+		final IFixedTimeWindow impl = this.create();
+		System.out.println(impl.getClass().getSimpleName() + "." + this.getClass().getSimpleName() + " (" + this.comment + ", runs: " + runtimes.length + "; calls per run: " + AFixedWindowBenchmark.pairs.size() + ")");
 		System.out.println("                     nanos               micros               millis");
 		long runtimeSum = 0l;
 		long runtimeMax = Long.MIN_VALUE;
