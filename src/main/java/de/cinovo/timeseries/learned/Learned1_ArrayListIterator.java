@@ -3,7 +3,6 @@ package de.cinovo.timeseries.learned;
 import java.util.ArrayList;
 
 /**
- * runtime: 9827 ms
  * 
  * @author mwittig
  * 

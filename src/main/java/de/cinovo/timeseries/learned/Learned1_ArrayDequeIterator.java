@@ -3,7 +3,6 @@ package de.cinovo.timeseries.learned;
 import java.util.ArrayDeque;
 
 /**
- * runtime: 19732 ms
  * 
  * @author mwittig
  * 
