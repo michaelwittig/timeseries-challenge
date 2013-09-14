@@ -9,10 +9,10 @@ package de.cinovo.timeseries.learned;
 @SuppressWarnings("javadoc")
 public final class Learned1_IntegerArray {
 	
-	private static final Integer run(final int delta, final Integer[] list) {
-		Integer v = delta;
+	private static final int run(final int delta, final Integer[] list) {
+		int v = delta;
 		for (int i = 0; i < list.length; i++) {
-			v += list[i];
+			v += list[i]; // autoboxing happens here
 		}
 		return v;
 	}

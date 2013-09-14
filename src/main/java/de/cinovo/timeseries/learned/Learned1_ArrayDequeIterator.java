@@ -11,10 +11,10 @@ import java.util.ArrayDeque;
 @SuppressWarnings("javadoc")
 public final class Learned1_ArrayDequeIterator {
 	
-	private static final Integer run(final int delta, final ArrayDeque<Integer> list) {
-		Integer v = delta;
+	private static final int run(final int delta, final ArrayDeque<Integer> list) {
+		int v = delta;
 		for (final Integer l : list) {
-			v += l;
+			v += l; // autoboxing happens here
 		}
 		return v;
 	}

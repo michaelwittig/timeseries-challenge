@@ -12,7 +12,7 @@ public final class Learned1_intArray {
 	private static final int run(final int delta, final int[] list) {
 		int v = delta;
 		for (int i = 0; i < list.length; i++) {
-			v += list[i];
+			v += list[i]; // NO autoboxing happens here
 		}
 		return v;
 	}

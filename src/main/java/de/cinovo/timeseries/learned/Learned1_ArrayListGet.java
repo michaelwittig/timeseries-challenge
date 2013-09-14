@@ -11,10 +11,10 @@ import java.util.ArrayList;
 @SuppressWarnings("javadoc")
 public final class Learned1_ArrayListGet {
 	
-	private static final Integer run(final int delta, final ArrayList<Integer> list) {
-		Integer v = delta;
+	private static final int run(final int delta, final ArrayList<Integer> list) {
+		int v = delta;
 		for (int i = 0; i < list.size(); i++) {
-			v += list.get(i);
+			v += list.get(i); // autoboxing happens here
 		}
 		return v;
 	}
