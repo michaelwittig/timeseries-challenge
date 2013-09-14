@@ -36,6 +36,8 @@ Java HotSpot(TM) 64-Bit Server VM (build 23.3-b01, mixed mode)
 	<thead>
 		<tr>
 			<th>Implementation</th>
+			<th>1 Elements</th>
+			<th>10 Elements</th>
 			<th>100 Elements</th>
 			<th>1000 Elements</th>
 			<th>10000 Elements</th>
@@ -46,41 +48,204 @@ Java HotSpot(TM) 64-Bit Server VM (build 23.3-b01, mixed mode)
 	<tbody>
 		<tr>
 			<td>[Learned1_ArrayListIterator](src/main/java/de/cinovo/timeseries/learned/Learned1_ArrayListIterator.java)</td>
+			<td>5</td>
+			<td>8</td>
 			<td>30</td>
 			<td>93</td>
 			<td>936</td>
 			<td>9622</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>Learned1_ArrayListGet</td>
+			<td>5</td>
+			<td>6</td>
 			<td>18</td>
 			<td>80</td>
 			<td>801</td>
 			<td>9706</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>Learned1_ArrayDequeIterator</td>
+			<td>6</td>
+			<td>6</td>
 			<td>29</td>
 			<td>206</td>
 			<td>1959</td>
 			<td>19485</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>Learned1_IntegerArray</td>
+			<td>4</td>
+			<td>5</td>
 			<td>5</td>
 			<td>4</td>
 			<td>5</td>
 			<td>5</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>Learned1_intArray</td>
 			<td>5</td>
 			<td>4</td>
 			<td>5</td>
+			<td>4</td>
+			<td>5</td>
 			<td>6</td>
+			<td></td>
 		</tr>
 	</tbody>
 </table>
+
+### Output: 1 Elements
+`````
+Learned1_ArrayListIterator
+0.122: [GC [PSYoungGen: 15728K->400K(917504K)] 15728K->400K(1966080K), 0.0016420 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.124: [Full GC (System) [PSYoungGen: 400K->0K(917504K)] [ParOldGen: 0K->298K(1048576K)] 400K->298K(1966080K) [PSPermGen: 2652K->2650K(21248K)], 0.0060580 secs] [Times: user=0.02 sys=0.00, real=0.00 secs] 
+start...
+test true
+warmup...
+warmup done
+0.163: [GC [PSYoungGen: 47186K->96K(917504K)] 47484K->394K(1966080K), 0.0031100 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+0.166: [Full GC (System) [PSYoungGen: 96K->0K(917504K)] [ParOldGen: 298K->294K(1048576K)] 394K->294K(1966080K) [PSPermGen: 2665K->2665K(21248K)], 0.0060990 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+measure...
+run (ns): 5697000
+run (ms): 5
+Learned1_ArrayListGet
+0.179: [GC [PSYoungGen: 31457K->64K(917504K)] 31751K->358K(1966080K), 0.0004860 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.180: [Full GC (System) [PSYoungGen: 64K->0K(917504K)] [ParOldGen: 294K->291K(1048576K)] 358K->291K(1966080K) [PSPermGen: 2668K->2668K(21248K)], 0.0069120 secs] [Times: user=0.02 sys=0.00, real=0.01 secs] 
+start...
+test true
+warmup...
+warmup done
+0.208: [GC [PSYoungGen: 15728K->64K(917504K)] 16020K->355K(1966080K), 0.0003280 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.208: [Full GC (System) [PSYoungGen: 64K->0K(917504K)] [ParOldGen: 291K->291K(1048576K)] 355K->291K(1966080K) [PSPermGen: 2671K->2671K(21248K)], 0.0063660 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+measure...
+run (ns): 5862000
+run (ms): 5
+Learned1_ArrayDequeIterator
+0.222: [GC [PSYoungGen: 15728K->64K(917504K)] 16020K->355K(1966080K), 0.0005400 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.223: [Full GC (System) [PSYoungGen: 64K->0K(917504K)] [ParOldGen: 291K->291K(1048576K)] 355K->291K(1966080K) [PSPermGen: 2675K->2675K(21248K)], 0.0098710 secs] [Times: user=0.02 sys=0.00, real=0.01 secs] 
+start...
+test true
+warmup...
+warmup done
+0.266: [GC [PSYoungGen: 15728K->64K(917504K)] 16020K->355K(1966080K), 0.0006730 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.267: [Full GC (System) [PSYoungGen: 64K->0K(917504K)] [ParOldGen: 291K->292K(1048576K)] 355K->292K(1966080K) [PSPermGen: 2683K->2683K(21248K)], 0.0145530 secs] [Times: user=0.02 sys=0.00, real=0.02 secs] 
+measure...
+run (ns): 6458000
+run (ms): 6
+Learned1_IntegerArray
+0.289: [GC [PSYoungGen: 15728K->64K(917504K)] 16021K->356K(1966080K), 0.0003250 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.289: [Full GC (System) [PSYoungGen: 64K->0K(917504K)] [ParOldGen: 292K->293K(1048576K)] 356K->293K(1966080K) [PSPermGen: 2687K->2687K(21248K)], 0.0040810 secs] [Times: user=0.00 sys=0.00, real=0.01 secs] 
+start...
+test true
+warmup...
+warmup done
+0.302: [GC [PSYoungGen: 15728K->32K(917504K)] 16021K->325K(1966080K), 0.0022750 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.304: [Full GC (System) [PSYoungGen: 32K->0K(917504K)] [ParOldGen: 293K->292K(1048576K)] 325K->292K(1966080K) [PSPermGen: 2688K->2688K(21248K)], 0.0056400 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+measure...
+run (ns): 4336000
+run (ms): 4
+Learned1_intArray
+0.316: [GC [PSYoungGen: 15728K->64K(917504K)] 16021K->356K(1966080K), 0.0005400 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+0.317: [Full GC (System) [PSYoungGen: 64K->0K(917504K)] [ParOldGen: 292K->293K(1048576K)] 356K->293K(1966080K) [PSPermGen: 2691K->2691K(21248K)], 0.0063300 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+start...
+test true
+warmup...
+warmup done
+0.331: [GC [PSYoungGen: 15728K->32K(917504K)] 16022K->325K(1966080K), 0.0004520 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+0.332: [Full GC (System) [PSYoungGen: 32K->0K(917504K)] [ParOldGen: 293K->293K(1048576K)] 325K->293K(1966080K) [PSPermGen: 2693K->2693K(21248K)], 0.0057320 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+measure...
+run (ns): 5851000
+run (ms): 5
+all done
+Heap
+ PSYoungGen      total 917504K, used 31457K [0x00000001583c0000, 0x00000001983c0000, 0x00000001983c0000)
+  eden space 786432K, 4% used [0x00000001583c0000,0x000000015a278630,0x00000001883c0000)
+  from space 131072K, 0% used [0x00000001903c0000,0x00000001903c0000,0x00000001983c0000)
+  to   space 131072K, 0% used [0x00000001883c0000,0x00000001883c0000,0x00000001903c0000)
+ ParOldGen       total 1048576K, used 293K [0x00000001183c0000, 0x00000001583c0000, 0x00000001583c0000)
+  object space 1048576K, 0% used [0x00000001183c0000,0x0000000118409568,0x00000001583c0000)
+ PSPermGen       total 21248K, used 2700K [0x00000001131c0000, 0x0000000114680000, 0x00000001183c0000)
+  object space 21248K, 12% used [0x00000001131c0000,0x00000001134632d0,0x0000000114680000)
+`````
+
+### Output: 10 Elements
+`````
+Learned1_ArrayListIterator
+0.123: [GC [PSYoungGen: 15728K->432K(917504K)] 15728K->432K(1966080K), 0.0017580 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+0.125: [Full GC (System) [PSYoungGen: 432K->0K(917504K)] [ParOldGen: 0K->298K(1048576K)] 432K->298K(1966080K) [PSPermGen: 2652K->2650K(21248K)], 0.0083770 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+start...
+test true
+warmup...
+warmup done
+0.190: [GC [PSYoungGen: 47186K->64K(917504K)] 47484K->362K(1966080K), 0.0017440 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+0.192: [Full GC (System) [PSYoungGen: 64K->0K(917504K)] [ParOldGen: 298K->294K(1048576K)] 362K->294K(1966080K) [PSPermGen: 2664K->2664K(21248K)], 0.0100950 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+measure...
+run (ns): 8724000
+run (ms): 8
+Learned1_ArrayListGet
+0.213: [GC [PSYoungGen: 31457K->64K(917504K)] 31751K->358K(1966080K), 0.0004160 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.213: [Full GC (System) [PSYoungGen: 64K->0K(917504K)] [ParOldGen: 294K->291K(1048576K)] 358K->291K(1966080K) [PSPermGen: 2668K->2668K(21248K)], 0.0087090 secs] [Times: user=0.02 sys=0.00, real=0.01 secs] 
+start...
+test true
+warmup...
+warmup done
+0.256: [GC [PSYoungGen: 15728K->64K(917504K)] 16020K->355K(1966080K), 0.0001920 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.256: [Full GC (System) [PSYoungGen: 64K->0K(917504K)] [ParOldGen: 291K->291K(1048576K)] 355K->291K(1966080K) [PSPermGen: 2670K->2670K(21248K)], 0.0043110 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+measure...
+run (ns): 6906000
+run (ms): 6
+Learned1_ArrayDequeIterator
+0.269: [GC [PSYoungGen: 15728K->64K(917504K)] 16020K->355K(1966080K), 0.0017520 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.271: [Full GC (System) [PSYoungGen: 64K->0K(917504K)] [ParOldGen: 291K->291K(1048576K)] 355K->291K(1966080K) [PSPermGen: 2675K->2675K(21248K)], 0.0047540 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+start...
+test true
+warmup...
+warmup done
+0.324: [GC [PSYoungGen: 15728K->64K(917504K)] 16020K->355K(1966080K), 0.0006750 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.325: [Full GC (System) [PSYoungGen: 64K->0K(917504K)] [ParOldGen: 291K->292K(1048576K)] 355K->292K(1966080K) [PSPermGen: 2682K->2682K(21248K)], 0.0062920 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+measure...
+run (ns): 6803000
+run (ms): 6
+Learned1_IntegerArray
+0.340: [GC [PSYoungGen: 15728K->64K(917504K)] 16021K->356K(1966080K), 0.0003660 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.340: [Full GC (System) [PSYoungGen: 64K->0K(917504K)] [ParOldGen: 292K->293K(1048576K)] 356K->293K(1966080K) [PSPermGen: 2686K->2686K(21248K)], 0.0055350 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+start...
+test true
+warmup...
+warmup done
+0.354: [GC [PSYoungGen: 15728K->32K(917504K)] 16021K->325K(1966080K), 0.0003210 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.355: [Full GC (System) [PSYoungGen: 32K->0K(917504K)] [ParOldGen: 293K->292K(1048576K)] 325K->292K(1966080K) [PSPermGen: 2688K->2688K(21248K)], 0.0050890 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+measure...
+run (ns): 5298000
+run (ms): 5
+Learned1_intArray
+0.367: [GC [PSYoungGen: 15728K->64K(917504K)] 16021K->356K(1966080K), 0.0003430 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.367: [Full GC (System) [PSYoungGen: 64K->0K(917504K)] [ParOldGen: 292K->293K(1048576K)] 356K->293K(1966080K) [PSPermGen: 2691K->2691K(21248K)], 0.0051190 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+start...
+test true
+warmup...
+warmup done
+0.379: [GC [PSYoungGen: 15728K->32K(917504K)] 16022K->325K(1966080K), 0.0007480 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.380: [Full GC (System) [PSYoungGen: 32K->0K(917504K)] [ParOldGen: 293K->293K(1048576K)] 325K->293K(1966080K) [PSPermGen: 2692K->2692K(21248K)], 0.0099700 secs] [Times: user=0.02 sys=0.00, real=0.01 secs] 
+measure...
+run (ns): 4147000
+run (ms): 4
+all done
+Heap
+ PSYoungGen      total 917504K, used 31457K [0x000000014e300000, 0x000000018e300000, 0x000000018e300000)
+  eden space 786432K, 4% used [0x000000014e300000,0x00000001501b8630,0x000000017e300000)
+  from space 131072K, 0% used [0x0000000186300000,0x0000000186300000,0x000000018e300000)
+  to   space 131072K, 0% used [0x000000017e300000,0x000000017e300000,0x0000000186300000)
+ ParOldGen       total 1048576K, used 293K [0x000000010e300000, 0x000000014e300000, 0x000000014e300000)
+  object space 1048576K, 0% used [0x000000010e300000,0x000000010e349588,0x000000014e300000)
+ PSPermGen       total 21248K, used 2700K [0x0000000109100000, 0x000000010a5c0000, 0x000000010e300000)
+  object space 21248K, 12% used [0x0000000109100000,0x00000001093a3160,0x000000010a5c0000)
+`````
 
 ### Output: 100 Elements
 `````
