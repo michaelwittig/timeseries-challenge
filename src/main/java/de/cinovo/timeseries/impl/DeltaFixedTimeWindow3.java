@@ -72,7 +72,7 @@ public final class DeltaFixedTimeWindow3 implements IFixedTimeWindow {
 		this.checkTime(time);
 		final TimeSeriesPair pair = new TimeSeriesPair(time, value);
 		this.values.add(pair);
-		// this.wrapper.add(pair);
+		this.wrapper.add(pair);
 	}
 	
 	@Override
