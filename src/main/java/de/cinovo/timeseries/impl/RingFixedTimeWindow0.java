@@ -7,15 +7,16 @@ import com.google.common.base.Preconditions;
 import de.cinovo.timeseries.IFixedTimeWindow;
 import de.cinovo.timeseries.ITimeSeries;
 import de.cinovo.timeseries.ITimeSeriesPair;
+import de.cinovo.timeseries.impl.RingFixedTimeWindow.ExpandStrategy;
 import de.cinovo.timeseries.test.AFixedTimeWindowTest;
 
 /**
- * The idea is to have a fixed size primitive array to keep track of the values.
+ * Optimization: Cache dev for variance calculation to only calculate added values until dev changes significantally.
  * 
  * @author mwittig
  * 
  */
-public final class RingFixedTimeWindow implements IFixedTimeWindow {
+public final class RingFixedTimeWindow0 implements IFixedTimeWindow {
 	
 	private final long windowLength;
 	
@@ -23,28 +24,11 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 	
 	
 	/**
-	 * 
-	 * @author mwittig
-	 * 
-	 */
-	public static enum ExpandStrategy {
-		/** double capacity. */
-		doubleCapacity,
-		
-		/** override values. */
-		override,
-		
-		/** throw exception. */
-		throwException
-	}
-	
-	
-	/**
 	 * @param windowLength Window length
 	 * @param maxSize Max size
 	 * @param expandStrategy Expand strategy
 	 */
-	public RingFixedTimeWindow(final long windowLength, final int maxSize, final ExpandStrategy expandStrategy) {
+	public RingFixedTimeWindow0(final long windowLength, final int maxSize, final ExpandStrategy expandStrategy) {
 		Preconditions.checkArgument(windowLength > 0, "window must be > 0");
 		Preconditions.checkArgument(maxSize > 0, "maxSize must be > 0");
 		Preconditions.checkNotNull(expandStrategy, "expandStrategy");
@@ -96,7 +80,11 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 		private float cachedAvergage = Float.POSITIVE_INFINITY;
 		private TimeSeriesPair cachedMaximum = Ring.CLEARED;
 		private TimeSeriesPair cachedMinimum = Ring.CLEARED;
+		
 		private float cachedVariance = Float.POSITIVE_INFINITY;
+		private float cachedAvergageAvg = Float.POSITIVE_INFINITY;
+		private double cachedVarianceSumDiff = 0.0d;
+		
 		private float cachedDeviation = Float.POSITIVE_INFINITY;
 		private float cachedMedian = Float.POSITIVE_INFINITY;
 		
@@ -179,6 +167,14 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 			this.sum += value;
 			
 			this.cachedAvergage = Float.POSITIVE_INFINITY;
+			if (!Float.isInfinite(this.cachedAvergageAvg) && FloatHelper.equals(this.avergage(), this.cachedAvergageAvg, AFixedTimeWindowTest.PRECISION)) {
+				final float abweichung = value - this.cachedAvergageAvg;
+				this.cachedVarianceSumDiff += abweichung * abweichung;
+				
+			} else {
+				this.cachedVarianceSumDiff = 0.0d;
+				this.cachedAvergageAvg = Float.POSITIVE_INFINITY;
+			}
 			this.cachedVariance = Float.POSITIVE_INFINITY;
 			this.cachedDeviation = Float.POSITIVE_INFINITY;
 			this.cachedMedian = Float.POSITIVE_INFINITY;
@@ -200,6 +196,8 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 			while (this.size > 0) {
 				if (this.times[this.ringTail] < minTime) {
 					final float value = this.values[this.ringTail];
+					this.delete();
+					deleted = true;
 					this.sum -= value;
 					if ((this.cachedMaximum != null) && (this.cachedMaximum != Ring.CLEARED) && FloatHelper.equals(value, this.cachedMaximum.value(), AFixedTimeWindowTest.PRECISION)) {
 						this.cachedMaximum = Ring.CLEARED; // we lost the maximum. we have to check all values to find the new minimum.
@@ -207,8 +205,14 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 					if ((this.cachedMinimum != null) && (this.cachedMinimum != Ring.CLEARED) && FloatHelper.equals(value, this.cachedMinimum.value(), AFixedTimeWindowTest.PRECISION)) {
 						this.cachedMinimum = Ring.CLEARED; // we lost the minimum. we have to check all values to find the new minimum.
 					}
-					this.delete();
-					deleted = true;
+					this.cachedAvergage = Float.POSITIVE_INFINITY;
+					if (!Float.isInfinite(this.cachedAvergageAvg) && FloatHelper.equals(this.avergage(), this.cachedAvergageAvg, AFixedTimeWindowTest.PRECISION)) {
+						final float abweichung = value - this.cachedAvergageAvg;
+						this.cachedVarianceSumDiff -= abweichung * abweichung;
+					} else {
+						this.cachedVarianceSumDiff = 0.0d;
+						this.cachedAvergageAvg = Float.POSITIVE_INFINITY;
+					}
 				} else {
 					break;
 				}
@@ -251,28 +255,32 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 		
 		private void refreshCacheVarDev() {
 			if (this.size > 0) {
-				if (Float.isInfinite(this.cachedAvergage)) {
-					this.refreshCacheAvg();
-				}
-				final float avg = this.cachedAvergage;
-				double sumAbweichungImQuadrat = 0.0d;
-				if (this.ringHead >= this.ringTail) {
-					for (int i = this.ringTail; i <= this.ringHead; i++) {
-						final float abweichung = this.values[i] - avg;
-						sumAbweichungImQuadrat += abweichung * abweichung;
-					}
+				if (!Float.isInfinite(this.cachedAvergageAvg)) {
+					this.cachedVariance = (float) (this.cachedVarianceSumDiff / this.size);
+					this.cachedDeviation = (float) Math.sqrt(this.cachedVariance);
 				} else {
-					for (int i = this.ringTail; i < this.maxSize; i++) {
-						final float abweichung = this.values[i] - avg;
-						sumAbweichungImQuadrat += abweichung * abweichung;
+					final float avg = this.avergage();
+					double sumAbweichungImQuadrat = 0.0d;
+					if (this.ringHead >= this.ringTail) {
+						for (int i = this.ringTail; i <= this.ringHead; i++) {
+							final float abweichung = this.values[i] - avg;
+							sumAbweichungImQuadrat += abweichung * abweichung;
+						}
+					} else {
+						for (int i = this.ringTail; i < this.maxSize; i++) {
+							final float abweichung = this.values[i] - avg;
+							sumAbweichungImQuadrat += abweichung * abweichung;
+						}
+						for (int i = 0; i <= this.ringHead; i++) {
+							final float abweichung = this.values[i] - avg;
+							sumAbweichungImQuadrat += abweichung * abweichung;
+						}
 					}
-					for (int i = 0; i <= this.ringHead; i++) {
-						final float abweichung = this.values[i] - avg;
-						sumAbweichungImQuadrat += abweichung * abweichung;
-					}
+					this.cachedAvergageAvg = avg;
+					this.cachedVarianceSumDiff = sumAbweichungImQuadrat;
+					this.cachedVariance = (float) (sumAbweichungImQuadrat / this.size);
+					this.cachedDeviation = (float) Math.sqrt(this.cachedVariance);
 				}
-				this.cachedVariance = (float) (sumAbweichungImQuadrat / this.size);
-				this.cachedDeviation = (float) Math.sqrt(this.cachedVariance);
 			} else {
 				this.cachedVariance = Float.NaN;
 				this.cachedDeviation = Float.NaN;

@@ -7,6 +7,7 @@ import com.google.common.base.Preconditions;
 import de.cinovo.timeseries.IFixedTimeWindow;
 import de.cinovo.timeseries.ITimeSeries;
 import de.cinovo.timeseries.ITimeSeriesPair;
+import de.cinovo.timeseries.test.AFixedTimeWindowTest;
 
 /**
  * 
@@ -146,10 +147,10 @@ public final class DeltaFixedTimeWindow2 implements IFixedTimeWindow {
 			this.sum += value;
 			this.cachedAvergage = Float.POSITIVE_INFINITY;
 			
-			if ((this.cachedMaximum == null) || ((this.cachedMaximum != Wrapper.CLEARED) && FloatHelper.greaterThan(value, this.cachedMaximum.value()))) {
+			if ((this.cachedMaximum == null) || ((this.cachedMaximum != Wrapper.CLEARED) && FloatHelper.greaterThan(value, this.cachedMaximum.value(), AFixedTimeWindowTest.PRECISION))) {
 				this.cachedMaximum = new TimeSeriesPair(time, value); // we have a new maximum
 			}
-			if ((this.cachedMinimum == null) || ((this.cachedMinimum != Wrapper.CLEARED) && FloatHelper.lessThan(value, this.cachedMinimum.value()))) {
+			if ((this.cachedMinimum == null) || ((this.cachedMinimum != Wrapper.CLEARED) && FloatHelper.lessThan(value, this.cachedMinimum.value(), AFixedTimeWindowTest.PRECISION))) {
 				this.cachedMinimum = new TimeSeriesPair(time, value); // we have a new minimum
 			}
 		}
@@ -161,10 +162,10 @@ public final class DeltaFixedTimeWindow2 implements IFixedTimeWindow {
 					break;
 				}
 				this.sum -= value;
-				if ((this.cachedMaximum != null) && (this.cachedMaximum != Wrapper.CLEARED) && FloatHelper.equals(value, this.cachedMaximum.value())) {
+				if ((this.cachedMaximum != null) && (this.cachedMaximum != Wrapper.CLEARED) && FloatHelper.equals(value, this.cachedMaximum.value(), AFixedTimeWindowTest.PRECISION)) {
 					this.cachedMaximum = Wrapper.CLEARED; // we lost the maximum. we have to check all values to find the new minimum.
 				}
-				if ((this.cachedMinimum != null) && (this.cachedMinimum != Wrapper.CLEARED) && FloatHelper.equals(value, this.cachedMinimum.value())) {
+				if ((this.cachedMinimum != null) && (this.cachedMinimum != Wrapper.CLEARED) && FloatHelper.equals(value, this.cachedMinimum.value(), AFixedTimeWindowTest.PRECISION)) {
 					this.cachedMinimum = Wrapper.CLEARED; // we lost the minimum. we have to check all values to find the new minimum.
 				}
 			}
