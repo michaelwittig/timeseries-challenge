@@ -12,6 +12,13 @@ import de.cinovo.timeseries.ITimeSeriesPair;
  * 
  * Optimization: Using a fixed primitive array for delting elements.
  * 
+ * DeltaFixedTimeWindow2.FirstBenchmark (window: 1000, runs: 10000; calls per run: 27088)<br>
+ * nanos micros millis<br>
+ * Avg 2927347,00 2927,35 2,93<br>
+ * Min 2660000,00 2660,00 2,66<br>
+ * Max 15711000,00 15711,00 15,71<br>
+ * 
+ * 
  * @author mwittig
  * 
  */
@@ -25,6 +32,10 @@ public final class DeltaFixedTimeWindow2 implements IFixedTimeWindow {
 	
 	private final ArrayDeque<TimeSeriesPair> values;
 	
+	private final float[] deletes;
+	
+	private static final float STOP_ELEMENT = Float.MIN_VALUE;
+	
 	private final Wrapper wrapper;
 	
 	
@@ -37,6 +48,7 @@ public final class DeltaFixedTimeWindow2 implements IFixedTimeWindow {
 		Preconditions.checkArgument(expectedMaxSize > 0, "expectedMaxSize must be > 0");
 		this.window = window;
 		this.expectedMaxSize = expectedMaxSize;
+		this.deletes = new float[this.expectedMaxSize];
 		this.values = new ArrayDeque<TimeSeriesPair>(expectedMaxSize);
 		this.wrapper = new Wrapper(this.values, this.deletes);
 	}
@@ -76,11 +88,6 @@ public final class DeltaFixedTimeWindow2 implements IFixedTimeWindow {
 		this.lastTime = now;
 	}
 	
-	
-	private final float[] deletes = new float[this.expectedMaxSize];
-	private static final float STOP_ELEMENT = Float.MIN_VALUE;
-	
-	
 	/**
 	 * @param now Time
 	 */
@@ -90,16 +97,17 @@ public final class DeltaFixedTimeWindow2 implements IFixedTimeWindow {
 			final TimeSeriesPair pair = this.values.pollFirst();
 			if (pair == null) {
 				this.deletes[i] = DeltaFixedTimeWindow2.STOP_ELEMENT;
-				break;
+				return;
 			}
 			if (pair.time() >= (now - this.window)) { // check if the value is not too old
 				this.values.addFirst(pair); // reinsert the value at the beginning
 				this.deletes[i] = DeltaFixedTimeWindow2.STOP_ELEMENT;
-				break;
+				return;
 			}
 			this.deletes[i] = pair.value();
 			i += 1;
 		}
+		throw new RuntimeException("more elements to delete than expcted");
 	}
 	
 	

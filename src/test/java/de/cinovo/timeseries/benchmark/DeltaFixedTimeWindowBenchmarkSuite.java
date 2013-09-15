@@ -1,7 +1,7 @@
 package de.cinovo.timeseries.benchmark;
 
 import de.cinovo.timeseries.IFixedTimeWindow;
-import de.cinovo.timeseries.impl.DeltaFixedTimeWindow;
+import de.cinovo.timeseries.impl.DeltaFixedTimeWindow3;
 
 /**
  * 
@@ -19,7 +19,7 @@ public final class DeltaFixedTimeWindowBenchmarkSuite extends ABenchmarkSuite {
 	
 	@Override
 	protected IFixedTimeWindow create(final long windowSize) {
-		return new DeltaFixedTimeWindow(windowSize);
+		return new DeltaFixedTimeWindow3(windowSize);
 	}
 	
 }

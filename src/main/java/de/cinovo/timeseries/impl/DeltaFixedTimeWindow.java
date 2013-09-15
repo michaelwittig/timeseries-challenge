@@ -14,6 +14,12 @@ import de.cinovo.timeseries.ITimeSeriesPair;
  * Implementation of a fixed window time series.<br>
  * The implementation tries to calculate only the changes made by the arriving and leaving values when possible.
  * 
+ * DeltaFixedTimeWindow.FirstBenchmark (window: 1000, runs: 10000; calls per run: 27088)<br>
+ * nanos micros millis<br>
+ * Avg 6474206,00 6474,21 6,47<br>
+ * Min 5998000,00 5998,00 6,00<br>
+ * Max 20060000,00 20060,00 20,06<br>
+ * 
  * @author mwittig
  * 
  */

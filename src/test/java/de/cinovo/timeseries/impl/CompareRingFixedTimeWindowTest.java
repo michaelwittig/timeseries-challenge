@@ -1,6 +1,7 @@
 package de.cinovo.timeseries.impl;
 
 import de.cinovo.timeseries.IFixedTimeWindow;
+import de.cinovo.timeseries.impl.RingFixedTimeWindow.ExpandStrategy;
 import de.cinovo.timeseries.test.ACompareWithSimpleFixedTimeWindowTest;
 
 /**
@@ -8,11 +9,11 @@ import de.cinovo.timeseries.test.ACompareWithSimpleFixedTimeWindowTest;
  * @author mwittig
  * 
  */
-public final class CompareTwoImplementationsTest extends ACompareWithSimpleFixedTimeWindowTest {
+public final class CompareRingFixedTimeWindowTest extends ACompareWithSimpleFixedTimeWindowTest {
 	
 	@Override
 	protected IFixedTimeWindow create2(long windowLength) {
-		return new DeltaFixedTimeWindow(windowLength);
+		return new RingFixedTimeWindow(windowLength, 10000, ExpandStrategy.throwException);
 	}
 	
 }
