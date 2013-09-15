@@ -10,6 +10,7 @@ import de.cinovo.timeseries.ITimeSeriesPair;
 import de.cinovo.timeseries.test.AFixedTimeWindowTest;
 
 /**
+ * The idea is to have a fixed size primitive array to keep track of the values.
  * 
  * @author mwittig
  * 
@@ -69,7 +70,12 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 	}
 	
 	
-	private static final class Ring implements ITimeSeries {
+	/**
+	 * 
+	 * @author mwittig
+	 * 
+	 */
+	public static final class Ring implements ITimeSeries {
 		
 		private final long windowLength;
 		private long lastNow = Long.MIN_VALUE;
@@ -95,6 +101,11 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 		private float cachedMedian = Float.POSITIVE_INFINITY;
 		
 		
+		/**
+		 * @param windowLength Window length
+		 * @param maxSize Max size
+		 * @param expandStrategy Expand strategy if $maxSize is exceeded
+		 */
 		public Ring(final long windowLength, final int maxSize, final ExpandStrategy expandStrategy) {
 			Preconditions.checkArgument(windowLength > 0, "window must be > 0");
 			Preconditions.checkArgument(maxSize > 0, "maxSize must be > 0");
@@ -106,13 +117,17 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 			this.values = new float[maxSize];
 		}
 		
-		public void checkTime(final long now) {
+		private void checkTime(final long now) {
 			if (now < this.lastNow) {
 				throw new IllegalArgumentException("now is in the past");
 			}
 			this.lastNow = now;
 		}
 		
+		/**
+		 * @param time Time
+		 * @param value Value
+		 */
 		public void add(long time, float value) {
 			this.checkTime(time);
 			final int nextHead = this.ringHead + 1;
@@ -175,6 +190,9 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 			}
 		}
 		
+		/**
+		 * @param now Time
+		 */
 		public void deleteOldValues(final long now) {
 			this.checkTime(now);
 			final long minTime = now - this.windowLength;
@@ -336,6 +354,13 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 			} else {
 				this.cachedMedian = Float.NaN;
 			}
+		}
+		
+		/**
+		 * @return Sum of values
+		 */
+		public double sum() {
+			return this.sum;
 		}
 		
 		@Override
