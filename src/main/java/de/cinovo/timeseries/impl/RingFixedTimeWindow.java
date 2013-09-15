@@ -70,6 +70,9 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 	private static final class Ring implements ITimeSeries {
 		
 		private final long windowLength;
+		private long lastNow = Long.MIN_VALUE;
+		
+		// ring
 		private final int maxSize;
 		private final ExpandStrategy expandStrategy;
 		private int ringHead = -1;
@@ -77,12 +80,10 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 		private int size = 0;
 		private long[] times;
 		private float[] values;
-		private long lastNow = Long.MIN_VALUE;
 		
+		// Caches
 		private static final TimeSeriesPair CLEARED = new TimeSeriesPair(Long.MIN_VALUE, Float.NaN);
-		
 		private TimeSeriesPair cachedMaximum = Ring.CLEARED;
-		
 		private TimeSeriesPair cachedMinimum = Ring.CLEARED;
 		
 		
@@ -151,23 +152,31 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 					throw new IndexOutOfBoundsException("maxSize reached");
 				}
 			}
-			this.clearCache();
+			
+			if ((this.cachedMaximum == null) || ((this.cachedMaximum != Ring.CLEARED) && FloatHelper.greaterThan(value, this.cachedMaximum.value()))) {
+				this.cachedMaximum = new TimeSeriesPair(time, value); // we have a new maximum
+			}
+			if ((this.cachedMinimum == null) || ((this.cachedMinimum != Ring.CLEARED) && FloatHelper.lessThan(value, this.cachedMinimum.value()))) {
+				this.cachedMinimum = new TimeSeriesPair(time, value); // we have a new minimum
+			}
 		}
 		
 		public void deleteOldValues(final long now) {
 			this.checkTime(now);
 			final long minTime = now - this.windowLength;
-			boolean deleted = false;
 			while (this.size > 0) {
 				if (this.times[this.ringTail] < minTime) {
+					final float value = this.values[this.ringTail];
+					if ((this.cachedMaximum != null) && (this.cachedMaximum != Ring.CLEARED) && FloatHelper.equals(value, this.cachedMaximum.value())) {
+						this.cachedMaximum = Ring.CLEARED; // we lost the maximum. we have to check all values to find the new minimum.
+					}
+					if ((this.cachedMinimum != null) && (this.cachedMinimum != Ring.CLEARED) && FloatHelper.equals(value, this.cachedMinimum.value())) {
+						this.cachedMinimum = Ring.CLEARED; // we lost the minimum. we have to check all values to find the new minimum.
+					}
 					this.delete();
-					deleted = true;
 				} else {
 					break;
 				}
-			}
-			if (deleted == true) {
-				this.clearCache();
 			}
 		}
 		
@@ -191,31 +200,38 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 			}
 		}
 		
-		private void clearCache() {
-			this.cachedMaximum = Ring.CLEARED;
-			this.cachedMinimum = Ring.CLEARED;
-		}
-		
 		private void refreshCacheMinMax() {
 			if (this.size > 0) {
-				long minTime = 0l;
-				float min = Float.MAX_VALUE;
-				long maxTime = 0l;
-				float max = Float.MIN_VALUE;
-				
-				for (int i = this.ringTail; ((i < this.maxSize) && (i <= this.ringHead)); i++) {
-					final long time = this.times[i];
-					final float value = this.values[i];
-					if (FloatHelper.greaterThan(value, max, AFixedTimeWindowTest.PRECISION)) {
-						maxTime = time;
-						max = value;
+				long minTime = -1l;
+				float min = Float.POSITIVE_INFINITY;
+				long maxTime = -1l;
+				float max = Float.NEGATIVE_INFINITY;
+				if (this.ringHead >= this.ringTail) {
+					for (int i = this.ringTail; i <= this.ringHead; i++) {
+						final long time = this.times[i];
+						final float value = this.values[i];
+						if (FloatHelper.greaterThan(value, max, AFixedTimeWindowTest.PRECISION)) {
+							maxTime = time;
+							max = value;
+						}
+						if (FloatHelper.lessThan(value, min, AFixedTimeWindowTest.PRECISION)) {
+							minTime = time;
+							min = value;
+						}
 					}
-					if (FloatHelper.lessThan(value, min, AFixedTimeWindowTest.PRECISION)) {
-						minTime = time;
-						min = value;
+				} else {
+					for (int i = this.ringTail; i < this.maxSize; i++) {
+						final long time = this.times[i];
+						final float value = this.values[i];
+						if (FloatHelper.greaterThan(value, max, AFixedTimeWindowTest.PRECISION)) {
+							maxTime = time;
+							max = value;
+						}
+						if (FloatHelper.lessThan(value, min, AFixedTimeWindowTest.PRECISION)) {
+							minTime = time;
+							min = value;
+						}
 					}
-				}
-				if (this.ringHead < this.ringTail) {
 					for (int i = 0; i <= this.ringHead; i++) {
 						final long time = this.times[i];
 						final float value = this.values[i];
