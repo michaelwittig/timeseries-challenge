@@ -41,8 +41,8 @@ public abstract class ACompareWithSimpleFixedTimeWindowTest {
 				final float value = Float.parseFloat(s[1]);
 				impl1.add(time, value);
 				impl2.add(time, value);
-				Assert.assertEquals(impl1.get(time).first().time(), impl2.get(time).first().time(), AFixedTimeWindowTest.PRECISION);
-				Assert.assertEquals(impl1.get(time).first().value(), impl2.get(time).first().value());
+				Assert.assertEquals(impl1.get(time).first().time(), impl2.get(time).first().time());
+				Assert.assertEquals(impl1.get(time).first().value(), impl2.get(time).first().value(), AFixedTimeWindowTest.PRECISION);
 			}
 		}
 	}
@@ -59,8 +59,8 @@ public abstract class ACompareWithSimpleFixedTimeWindowTest {
 				final float value = Float.parseFloat(s[1]);
 				impl1.add(time, value);
 				impl2.add(time, value);
-				Assert.assertEquals(impl1.get(time).last().time(), impl2.get(time).last().time(), AFixedTimeWindowTest.PRECISION);
-				Assert.assertEquals(impl1.get(time).last().value(), impl2.get(time).last().value());
+				Assert.assertEquals(impl1.get(time).last().time(), impl2.get(time).last().time());
+				Assert.assertEquals(impl1.get(time).last().value(), impl2.get(time).last().value(), AFixedTimeWindowTest.PRECISION);
 			}
 		}
 	}
@@ -94,8 +94,8 @@ public abstract class ACompareWithSimpleFixedTimeWindowTest {
 				final float value = Float.parseFloat(s[1]);
 				impl1.add(time, value);
 				impl2.add(time, value);
-				Assert.assertEquals(impl1.get(time).minimum().time(), impl2.get(time).minimum().time(), AFixedTimeWindowTest.PRECISION);
-				Assert.assertEquals(impl1.get(time).minimum().value(), impl2.get(time).minimum().value());
+				Assert.assertEquals(impl1.get(time).minimum().time(), impl2.get(time).minimum().time());
+				Assert.assertEquals(impl1.get(time).minimum().value(), impl2.get(time).minimum().value(), AFixedTimeWindowTest.PRECISION);
 			}
 		}
 	}
@@ -112,8 +112,8 @@ public abstract class ACompareWithSimpleFixedTimeWindowTest {
 				final float value = Float.parseFloat(s[1]);
 				impl1.add(time, value);
 				impl2.add(time, value);
-				Assert.assertEquals(impl1.get(time).maximum().time(), impl2.get(time).maximum().time(), AFixedTimeWindowTest.PRECISION);
-				Assert.assertEquals(impl1.get(time).maximum().value(), impl2.get(time).maximum().value());
+				Assert.assertEquals(impl1.get(time).maximum().time(), impl2.get(time).maximum().time());
+				Assert.assertEquals(impl1.get(time).maximum().value(), impl2.get(time).maximum().value(), AFixedTimeWindowTest.PRECISION);
 			}
 		}
 	}
