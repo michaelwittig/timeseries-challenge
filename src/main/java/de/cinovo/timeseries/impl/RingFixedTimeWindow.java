@@ -1,5 +1,7 @@
 package de.cinovo.timeseries.impl;
 
+import java.util.Arrays;
+
 import com.google.common.base.Preconditions;
 
 import de.cinovo.timeseries.IFixedTimeWindow;
@@ -88,6 +90,9 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 		private float cachedAvergage = Float.POSITIVE_INFINITY;
 		private TimeSeriesPair cachedMaximum = Ring.CLEARED;
 		private TimeSeriesPair cachedMinimum = Ring.CLEARED;
+		private float cachedVariance = Float.POSITIVE_INFINITY;
+		private float cachedDeviation = Float.POSITIVE_INFINITY;
+		private float cachedMedian = Float.POSITIVE_INFINITY;
 		
 		
 		public Ring(final long windowLength, final int maxSize, final ExpandStrategy expandStrategy) {
@@ -159,6 +164,9 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 			this.sum += value;
 			
 			this.cachedAvergage = Float.POSITIVE_INFINITY;
+			this.cachedVariance = Float.POSITIVE_INFINITY;
+			this.cachedDeviation = Float.POSITIVE_INFINITY;
+			this.cachedMedian = Float.POSITIVE_INFINITY;
 			if ((this.cachedMaximum == null) || ((this.cachedMaximum != Ring.CLEARED) && FloatHelper.greaterThan(value, this.cachedMaximum.value()))) {
 				this.cachedMaximum = new TimeSeriesPair(time, value); // we have a new maximum
 			}
@@ -189,6 +197,9 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 			}
 			if (deleted == true) {
 				this.cachedAvergage = Float.POSITIVE_INFINITY;
+				this.cachedVariance = Float.POSITIVE_INFINITY;
+				this.cachedDeviation = Float.POSITIVE_INFINITY;
+				this.cachedMedian = Float.POSITIVE_INFINITY;
 			}
 		}
 		
@@ -217,6 +228,36 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 				this.cachedAvergage = (float) (this.sum / this.size);
 			} else {
 				this.cachedAvergage = Float.NaN;
+			}
+		}
+		
+		private void refreshCacheVarDev() {
+			if (this.size > 0) {
+				if (Float.isInfinite(this.cachedAvergage)) {
+					this.refreshCacheAvg();
+				}
+				final float avg = this.cachedAvergage;
+				double sumAbweichungImQuadrat = 0.0d;
+				if (this.ringHead >= this.ringTail) {
+					for (int i = this.ringTail; i <= this.ringHead; i++) {
+						final float abweichung = this.values[i] - avg;
+						sumAbweichungImQuadrat += abweichung * abweichung;
+					}
+				} else {
+					for (int i = this.ringTail; i < this.maxSize; i++) {
+						final float abweichung = this.values[i] - avg;
+						sumAbweichungImQuadrat += abweichung * abweichung;
+					}
+					for (int i = 0; i <= this.ringHead; i++) {
+						final float abweichung = this.values[i] - avg;
+						sumAbweichungImQuadrat += abweichung * abweichung;
+					}
+				}
+				this.cachedVariance = (float) (sumAbweichungImQuadrat / this.size);
+				this.cachedDeviation = (float) Math.sqrt(this.cachedVariance);
+			} else {
+				this.cachedVariance = Float.NaN;
+				this.cachedDeviation = Float.NaN;
 			}
 		}
 		
@@ -273,6 +314,30 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 			}
 		}
 		
+		private void refreshCacheMed() {
+			if (this.size > 0) {
+				final float[] v = new float[this.size];
+				
+				if (this.ringHead >= this.ringTail) {
+					System.arraycopy(this.values, this.ringTail, v, 0, this.size);
+				} else {
+					final int firstLength = (this.maxSize - this.ringTail);
+					System.arraycopy(this.values, this.ringTail, v, 0, firstLength);
+					System.arraycopy(this.values, 0, v, firstLength, this.ringHead + 1);
+				}
+				Arrays.sort(v);
+				final float med;
+				if ((v.length % 2) == 0) {
+					med = (v[(v.length / 2) - 1] + v[v.length / 2]) / 2.0f;
+				} else {
+					med = v[v.length / 2];
+				}
+				this.cachedMedian = med;
+			} else {
+				this.cachedMedian = Float.NaN;
+			}
+		}
+		
 		@Override
 		public ITimeSeriesPair first() {
 			if (this.size > 0) {
@@ -315,20 +380,26 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 		
 		@Override
 		public float variance() {
-			// TODO Auto-generated method stub
-			return 0;
+			if (Float.isInfinite(this.cachedVariance)) {
+				this.refreshCacheVarDev();
+			}
+			return this.cachedVariance;
 		}
 		
 		@Override
 		public float deviation() {
-			// TODO Auto-generated method stub
-			return 0;
+			if (Float.isInfinite(this.cachedDeviation)) {
+				this.refreshCacheVarDev();
+			}
+			return this.cachedDeviation;
 		}
 		
 		@Override
 		public float median() {
-			// TODO Auto-generated method stub
-			return 0;
+			if (Float.isInfinite(this.cachedMedian)) {
+				this.refreshCacheMed();
+			}
+			return this.cachedMedian;
 		}
 		
 		@Override
