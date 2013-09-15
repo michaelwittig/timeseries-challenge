@@ -81,8 +81,11 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 		private long[] times;
 		private float[] values;
 		
+		private double sum;
+		
 		// Caches
 		private static final TimeSeriesPair CLEARED = new TimeSeriesPair(Long.MIN_VALUE, Float.NaN);
+		private float cachedAvergage = Float.POSITIVE_INFINITY;
 		private TimeSeriesPair cachedMaximum = Ring.CLEARED;
 		private TimeSeriesPair cachedMinimum = Ring.CLEARED;
 		
@@ -153,6 +156,9 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 				}
 			}
 			
+			this.sum += value;
+			
+			this.cachedAvergage = Float.POSITIVE_INFINITY;
 			if ((this.cachedMaximum == null) || ((this.cachedMaximum != Ring.CLEARED) && FloatHelper.greaterThan(value, this.cachedMaximum.value()))) {
 				this.cachedMaximum = new TimeSeriesPair(time, value); // we have a new maximum
 			}
@@ -164,9 +170,11 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 		public void deleteOldValues(final long now) {
 			this.checkTime(now);
 			final long minTime = now - this.windowLength;
+			boolean deleted = false;
 			while (this.size > 0) {
 				if (this.times[this.ringTail] < minTime) {
 					final float value = this.values[this.ringTail];
+					this.sum -= value;
 					if ((this.cachedMaximum != null) && (this.cachedMaximum != Ring.CLEARED) && FloatHelper.equals(value, this.cachedMaximum.value())) {
 						this.cachedMaximum = Ring.CLEARED; // we lost the maximum. we have to check all values to find the new minimum.
 					}
@@ -174,9 +182,13 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 						this.cachedMinimum = Ring.CLEARED; // we lost the minimum. we have to check all values to find the new minimum.
 					}
 					this.delete();
+					deleted = true;
 				} else {
 					break;
 				}
+			}
+			if (deleted == true) {
+				this.cachedAvergage = Float.POSITIVE_INFINITY;
 			}
 		}
 		
@@ -197,6 +209,14 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 				this.size -= 1;
 			} else {
 				throw new IndexOutOfBoundsException("nextTail " + nextTail);
+			}
+		}
+		
+		private void refreshCacheAvg() {
+			if (this.size > 0) {
+				this.cachedAvergage = (float) (this.sum / this.size);
+			} else {
+				this.cachedAvergage = Float.NaN;
 			}
 		}
 		
@@ -287,8 +307,10 @@ public final class RingFixedTimeWindow implements IFixedTimeWindow {
 		
 		@Override
 		public float avergage() {
-			// TODO Auto-generated method stub
-			return 0;
+			if (Float.isInfinite(this.cachedAvergage)) {
+				this.refreshCacheAvg();
+			}
+			return this.cachedAvergage;
 		}
 		
 		@Override
