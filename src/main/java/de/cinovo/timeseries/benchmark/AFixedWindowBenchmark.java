@@ -1,6 +1,9 @@
 package de.cinovo.timeseries.benchmark;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +24,7 @@ public abstract class AFixedWindowBenchmark {
 	
 	private static final int MEASURE_CYCLES = 10000;
 	
-	private static final List<ITimeSeriesPair> pairs;
+	private final List<ITimeSeriesPair> pairs;
 	
 	private final String comment;
 	
@@ -29,8 +32,70 @@ public abstract class AFixedWindowBenchmark {
 	
 	private final long windowSize;
 	
-	static {
-		try (final BufferedReader br = new BufferedReader(new InputStreamReader(AFixedWindowBenchmark.class.getClassLoader().getResourceAsStream("de/cinovo/timeseries/benchmark/benchmark.data")))) {
+	
+	/** */
+	public interface IDataset {
+		
+		/**
+		 * @return Stream
+		 */
+		InputStream getStream();
+	}
+	
+	/** */
+	public enum Dataset implements IDataset {
+		
+		/** benchmark data (~200 k entries). */
+		benchmark(AFixedWindowBenchmark.class.getClassLoader().getResourceAsStream("de/cinovo/timeseries/benchmark/benchmark.data")),
+		
+		/** Smooth data (500 k entries) */
+		smooth("/tmp/smooth.data"),
+		
+		/** Smooth data (100 mio entries) */
+		smoothLarge("/tmp/smooth.large.data"),
+		
+		/** Chaotic data (500 k entries) */
+		chaotic("/tmp/chaotic.data"),
+		
+		/** Chaotic data (100 mio entries) */
+		chaoticLarge("/tmp/chaotic.large.data");
+		
+		private final InputStream stream;
+		
+		
+		private Dataset(final InputStream aStream) {
+			this.stream = aStream;
+		}
+		
+		private Dataset(final String aFile) {
+			try {
+				this.stream = new FileInputStream(aFile);
+			} catch (final FileNotFoundException e) {
+				System.err.println("Please run CreateDatasets.main() first");
+				throw new RuntimeException(e);
+			}
+		}
+		
+		@Override
+		public InputStream getStream() {
+			return this.stream;
+		}
+		
+	}
+	
+	
+	/**
+	 * @param aBenchmarkSuite Benchmark suite
+	 * @param aDataset Dataset
+	 * @param aWindowSize Window size
+	 * @param aComment Comment
+	 * @throws Exception If something went wrong...
+	 */
+	protected AFixedWindowBenchmark(final ABenchmarkSuite aBenchmarkSuite, final Dataset aDataset, final long aWindowSize, final String aComment) {
+		this.comment = aComment;
+		this.benchmarkSuite = aBenchmarkSuite;
+		this.windowSize = aWindowSize;
+		try (final BufferedReader br = new BufferedReader(new InputStreamReader(aDataset.getStream()))) {
 			String line;
 			final ArrayList<ITimeSeriesPair> aPairs = new ArrayList<ITimeSeriesPair>();
 			while ((line = br.readLine()) != null) {
@@ -39,57 +104,27 @@ public abstract class AFixedWindowBenchmark {
 				final float value = Float.parseFloat(s[1]);
 				aPairs.add(new TimeSeriesPair(time, value));
 			}
-			pairs = aPairs;
+			this.pairs = aPairs;
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	
-	/**
-	 * Create random benchmark data.
-	 */
-	public static void createRandomBenchmarkData() {
-		long time = 1378591663329l;
-		float value = 123.45f;
-		for (int i = 0; i < 100000; i++) {
-			System.out.println(time + "," + value);
-			time += (long) (Math.random() * 1000l) + 1l;
-			if (Math.random() < 0.5d) {
-				value += 0.01f;
-			} else {
-				value -= 0.01f;
-			}
-			value = Math.round(value * 100.0f) / 100.0f;
-		}
-	}
-	
 	/**
 	 * @param aBenchmarkSuite Benchmark suite
-	 * @param aWindowSize Window size
-	 * @param aComment Comment
-	 * @throws Exception If something went wrong...
-	 */
-	protected AFixedWindowBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize, final String aComment) {
-		this.comment = aComment;
-		this.benchmarkSuite = aBenchmarkSuite;
-		this.windowSize = aWindowSize;
-	}
-	
-	/**
-	 * @param aBenchmarkSuite Benchmark suite
+	 * @param aDataset Dataset
 	 * @param aWindowSize Window size
 	 * @throws Exception If something went wrong...
 	 */
-	protected AFixedWindowBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize) {
-		this(aBenchmarkSuite, aWindowSize, "window: " + aWindowSize);
+	protected AFixedWindowBenchmark(final ABenchmarkSuite aBenchmarkSuite, final Dataset aDataset, final long aWindowSize) {
+		this(aBenchmarkSuite, aDataset, aWindowSize, "window: " + aWindowSize);
 	}
 	
 	private void warmUp() {
 		System.gc();
 		for (int i = 0; i < AFixedWindowBenchmark.WARM_UP_CYCLES; i++) {
 			final IFixedTimeWindow impl = this.create();
-			for (final ITimeSeriesPair pair : AFixedWindowBenchmark.pairs) {
+			for (final ITimeSeriesPair pair : this.pairs) {
 				this.call(impl, pair);
 			}
 		}
@@ -110,7 +145,7 @@ public abstract class AFixedWindowBenchmark {
 		for (int i = 0; i < AFixedWindowBenchmark.MEASURE_CYCLES; i++) {
 			final IFixedTimeWindow impl = this.create();
 			final long begin = System.nanoTime();
-			for (final ITimeSeriesPair pair : AFixedWindowBenchmark.pairs) {
+			for (final ITimeSeriesPair pair : this.pairs) {
 				this.call(impl, pair);
 			}
 			final long end = System.nanoTime();
@@ -128,7 +163,7 @@ public abstract class AFixedWindowBenchmark {
 	
 	private void report(final long[] runtimes) {
 		final IFixedTimeWindow impl = this.create();
-		System.out.println(impl.getClass().getSimpleName() + "." + this.getClass().getSimpleName() + " (" + this.comment + ", runs: " + runtimes.length + "; calls per run: " + AFixedWindowBenchmark.pairs.size() + ")");
+		System.out.println(impl.getClass().getSimpleName() + "." + this.getClass().getSimpleName() + " (" + this.comment + ", runs: " + runtimes.length + "; calls per run: " + this.pairs.size() + ")");
 		System.out.println("                     nanos               micros               millis");
 		long runtimeSum = 0l;
 		long runtimeMax = Long.MIN_VALUE;
