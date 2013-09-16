@@ -11,10 +11,11 @@ public final class MedianBenchmark extends AFixedWindowBenchmark {
 	
 	/**
 	 * @param aBenchmarkSuite Benchmark suite
+	 * @param aDataset Dataset
 	 * @param aWindowSize Window size
 	 */
-	public MedianBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize) {
-		super(aBenchmarkSuite, aWindowSize);
+	public MedianBenchmark(final ABenchmarkSuite aBenchmarkSuite, final Dataset aDataset, final long aWindowSize) {
+		super(aBenchmarkSuite, aDataset, aWindowSize);
 	}
 	
 	@Override

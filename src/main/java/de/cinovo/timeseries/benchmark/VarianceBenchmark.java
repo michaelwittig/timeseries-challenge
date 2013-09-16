@@ -11,10 +11,11 @@ public final class VarianceBenchmark extends AFixedWindowBenchmark {
 	
 	/**
 	 * @param aBenchmarkSuite Benchmark suite
+	 * @param aDataset Dataset
 	 * @param aWindowSize Window size
 	 */
-	public VarianceBenchmark(final ABenchmarkSuite aBenchmarkSuite, final long aWindowSize) {
-		super(aBenchmarkSuite, aWindowSize);
+	public VarianceBenchmark(final ABenchmarkSuite aBenchmarkSuite, final Dataset aDataset, final long aWindowSize) {
+		super(aBenchmarkSuite, aDataset, aWindowSize);
 	}
 	
 	@Override
