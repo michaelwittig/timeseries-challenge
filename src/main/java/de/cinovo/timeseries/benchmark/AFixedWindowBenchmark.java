@@ -39,46 +39,47 @@ public abstract class AFixedWindowBenchmark {
 		/**
 		 * @return Stream
 		 */
-		InputStream getStream();
+		InputStream createStream();
 	}
 	
 	/** */
 	public enum Dataset implements IDataset {
 		
 		/** benchmark data (~200 k entries). */
-		benchmark(AFixedWindowBenchmark.class.getClassLoader().getResourceAsStream("de/cinovo/timeseries/benchmark/benchmark.data")),
+		benchmark(false, "de/cinovo/timeseries/benchmark/benchmark.data"),
 		
 		/** Smooth data (500 k entries) */
-		smooth("/tmp/smooth.data"),
+		smooth(true, "/tmp/smooth.data"),
 		
 		/** Smooth data (100 mio entries) */
-		smoothLarge("/tmp/smooth.large.data"),
+		smoothLarge(true, "/tmp/smooth.large.data"),
 		
 		/** Chaotic data (500 k entries) */
-		chaotic("/tmp/chaotic.data"),
+		chaotic(true, "/tmp/chaotic.data"),
 		
 		/** Chaotic data (100 mio entries) */
-		chaoticLarge("/tmp/chaotic.large.data");
+		chaoticLarge(true, "/tmp/chaotic.large.data");
 		
-		private final InputStream stream;
+		private final boolean file;
+		private final String url;
 		
 		
-		private Dataset(final InputStream aStream) {
-			this.stream = aStream;
-		}
-		
-		private Dataset(final String aFile) {
-			try {
-				this.stream = new FileInputStream(aFile);
-			} catch (final FileNotFoundException e) {
-				System.err.println("Please run CreateDatasets.main() first");
-				throw new RuntimeException(e);
-			}
+		private Dataset(final boolean aFile, final String aUrl) {
+			this.file = aFile;
+			this.url = aUrl;
 		}
 		
 		@Override
-		public InputStream getStream() {
-			return this.stream;
+		public InputStream createStream() {
+			if (this.file) {
+				try {
+					return new FileInputStream(this.url);
+				} catch (final FileNotFoundException e) {
+					System.err.println("Please run CreateDatasets.main() first");
+					throw new RuntimeException(e);
+				}
+			}
+			return AFixedWindowBenchmark.class.getClassLoader().getResourceAsStream(this.url);
 		}
 		
 	}
@@ -95,7 +96,7 @@ public abstract class AFixedWindowBenchmark {
 		this.comment = aComment;
 		this.benchmarkSuite = aBenchmarkSuite;
 		this.windowSize = aWindowSize;
-		try (final BufferedReader br = new BufferedReader(new InputStreamReader(aDataset.getStream()))) {
+		try (final BufferedReader br = new BufferedReader(new InputStreamReader(aDataset.createStream()))) {
 			String line;
 			final ArrayList<ITimeSeriesPair> aPairs = new ArrayList<ITimeSeriesPair>();
 			while ((line = br.readLine()) != null) {
