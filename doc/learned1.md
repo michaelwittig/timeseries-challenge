@@ -2,7 +2,7 @@
 
 ## Summary
 
-I found some interesting performance differences while solving the [timeseries-chalenge](https://github.com/cinovo/timeseries-challenge).
+I found some interesting performance differences while solving the [timeseries-chalenge](https://github.com/michaelwittig/timeseries-challenge).
 I assumed that iterating over an ArrayList should be comparable to iterating over an Array. But I found out that the opposite is true:
 Iterating over an Array using
 `````

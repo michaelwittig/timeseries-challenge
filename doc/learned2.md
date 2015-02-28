@@ -2,7 +2,7 @@
 
 ## Summary
 
-I found some interesting performance differences while solving the [timeseries-chalenge](https://github.com/cinovo/timeseries-challenge).
+I found some interesting performance differences while solving the [timeseries-chalenge](https://github.com/michaelwittig/timeseries-challenge).
 
 ## Expectation
 * I expected that iterating over a primitive Array int[] is faster than Integer[] because we can benefit from cpu caches
